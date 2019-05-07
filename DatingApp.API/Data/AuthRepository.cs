@@ -2,6 +2,9 @@ using System;
 using System.Reflection.Metadata;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using DatingApp.API.Models;
+
 namespace DatingApp.API.Data
 {
     public class AuthRepository : IAuthRepository
@@ -11,7 +14,7 @@ namespace DatingApp.API.Data
         {
             _context = context;
         }
-        public Task<User> Login(string username, string password)
+        public async Task<User> Login(string username, string password)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
 
@@ -37,7 +40,7 @@ namespace DatingApp.API.Data
             }
         }
 
-        public Task<User> Register(User user, string password)
+        public async Task<User> Register(User user, string password)
         {
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -60,7 +63,7 @@ namespace DatingApp.API.Data
             }
         }
 
-        public Task<bool> UserExists(string username)
+        public async Task<bool> UserExists(string username)
         {
             if(await _context.Users.AnyAsync(x => x.Username == username))
                 return true;
